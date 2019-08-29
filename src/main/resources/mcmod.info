@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mystcraftresearch",
+  "name": "Mystcraft Research",
+  "description": "Adds a research system for learning Mystcraft symbols.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["TheFloydman"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
