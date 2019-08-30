@@ -16,6 +16,7 @@ import thefloydman.mystcraftresearch.capability.CapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.capability.ICapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.capability.StorageCapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
+import thefloydman.mystcraftresearch.research.Research;
 import thefloydman.mystcraftresearch.tileentity.TileEntitySymbolRecordingDesk;
 import thefloydman.mystcraftresearch.util.Reference;
 
@@ -44,7 +45,7 @@ public class CommonProxy {
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
-
+		Research.init();
 	}
 
 }

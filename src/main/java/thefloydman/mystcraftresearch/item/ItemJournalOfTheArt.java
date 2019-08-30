@@ -25,7 +25,7 @@ public class ItemJournalOfTheArt extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if (!world.isRemote) {
 			Biome biome = world.getBiome(player.getPosition());
-			Research.learnBiome(player, biome);
+			Research.learnSymbol(player, biome);
 		}
 		return super.onItemRightClick(world, player, hand);
 	}
