@@ -4,19 +4,21 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
+
 import net.minecraft.entity.player.EntityPlayerMP;
-import thefloydman.mystcraftresearch.research.Knowledge;
+import thefloydman.mystcraftresearch.research.Research;
 
 public interface ICapabilityMystcraftResearch {
 
-	public void learnKnowledge(Knowledge knowledge, @Nullable EntityPlayerMP player);
+	public void learnSymbol(IAgeSymbol symbol, @Nullable EntityPlayerMP player);
 
-	public void forgetKnowledge(Knowledge knowledge);
+	public void forgetSymbol(IAgeSymbol symbol);
 
-	public List<Knowledge> getPlayerKnowledge();
+	public List<IAgeSymbol> getKnownSymbols();
 
-	public void setPlayerKnowledge(List<Knowledge> knowledge);
+	public void setKnownSymbols(List<IAgeSymbol> symbols);
 
-	public boolean hasKnowledge(Knowledge knowledge);
+	public boolean knowsSymbol(IAgeSymbol symbol);
 
 }

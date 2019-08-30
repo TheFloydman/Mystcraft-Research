@@ -3,29 +3,34 @@ package thefloydman.mystcraftresearch.capability;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
+import com.xcompwiz.mystcraft.symbol.modifiers.SymbolBiome;
+
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.biome.Biome;
 import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
-import thefloydman.mystcraftresearch.research.Knowledge;
+import thefloydman.mystcraftresearch.proxy.CommonProxy;
 import thefloydman.mystcraftresearch.util.Reference;
 
 public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch {
 
-	protected List<Knowledge> playerKnowledge = new ArrayList<Knowledge>();
+	protected List<IAgeSymbol> playerSymbols = new ArrayList<IAgeSymbol>();
 
 	@Override
-	public void learnKnowledge(Knowledge knowledge, @Nullable EntityPlayerMP player) {
-		if (!this.hasKnowledge(knowledge)) {
-			this.playerKnowledge.add(knowledge);
-			if (player != null) {
-				if (knowledge.asBiome() != null) {
+	public void learnSymbol(@Nonnull IAgeSymbol symbol, @Nullable EntityPlayerMP player) {
+		if (player != null) {
+			if (!this.knowsSymbol(symbol)) {
+				this.playerSymbols.add(symbol);
+
+				if (symbol instanceof SymbolBiome) {
 					MystcraftResearchPacketHandler.sendTranslatedMessage(player, Reference.Message.LEARN_BIOME.key);
 				}
-			}
-		} else {
-			if (player != null) {
-				if (knowledge.asBiome() != null) {
+			} else {
+
+				if (symbol instanceof SymbolBiome) {
 					MystcraftResearchPacketHandler.sendTranslatedMessage(player, Reference.Message.KNOWN_BIOME.key);
 				}
 			}
@@ -33,27 +38,27 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 	}
 
 	@Override
-	public void forgetKnowledge(Knowledge knowledge) {
-		if (this.hasKnowledge(knowledge)) {
-			this.playerKnowledge.remove(knowledge);
+	public void forgetSymbol(IAgeSymbol symbol) {
+		if (this.knowsSymbol(symbol)) {
+			this.playerSymbols.remove(symbol);
 		}
 	}
 
 	@Override
-	public List<Knowledge> getPlayerKnowledge() {
-		return this.playerKnowledge;
+	public List<IAgeSymbol> getKnownSymbols() {
+		return this.playerSymbols;
 	}
 
 	@Override
-	public void setPlayerKnowledge(List<Knowledge> knowledge) {
-		this.playerKnowledge = knowledge;
+	public void setKnownSymbols(List<IAgeSymbol> symbols) {
+		this.playerSymbols = symbols;
 	}
 
 	@Override
-	public boolean hasKnowledge(Knowledge knowledgeIn) {
+	public boolean knowsSymbol(IAgeSymbol symbol) {
 		boolean knows = false;
-		for (Knowledge knowledgePiece : this.getPlayerKnowledge()) {
-			if (knowledgePiece.toString().equals(knowledgeIn.toString())) {
+		for (IAgeSymbol knownSymbol : this.getKnownSymbols()) {
+			if (knownSymbol.equals(symbol)) {
 				knows = true;
 				break;
 			}

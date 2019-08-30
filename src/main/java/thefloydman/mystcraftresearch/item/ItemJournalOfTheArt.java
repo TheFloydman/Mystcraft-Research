@@ -3,16 +3,13 @@ package thefloydman.mystcraftresearch.item;
 import com.xcompwiz.mystcraft.core.MystcraftCommonProxy;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import thefloydman.mystcraftresearch.capability.ICapabilityMystcraftResearch;
-import thefloydman.mystcraftresearch.capability.ProviderCapabilityMystcraftResearch;
-import thefloydman.mystcraftresearch.research.Knowledge;
+import thefloydman.mystcraftresearch.research.Research;
 import thefloydman.mystcraftresearch.util.Reference;
 
 public class ItemJournalOfTheArt extends Item {
@@ -28,9 +25,7 @@ public class ItemJournalOfTheArt extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if (!world.isRemote) {
 			Biome biome = world.getBiome(player.getPosition());
-			ICapabilityMystcraftResearch cap = player
-					.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
-			cap.learnKnowledge(new Knowledge(biome), (EntityPlayerMP) player);
+			Research.learnBiome(player, biome);
 		}
 		return super.onItemRightClick(world, player, hand);
 	}
