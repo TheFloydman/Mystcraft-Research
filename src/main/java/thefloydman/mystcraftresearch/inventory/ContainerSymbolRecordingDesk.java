@@ -54,22 +54,22 @@ public class ContainerSymbolRecordingDesk extends ContainerBase implements IGuiM
 		IOInventory inventory = te.getMainItemHandler();
 
 		this.addSlotToContainer(
-				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_PAPER, -20, 20));
+				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_PAPER, 9, 176));
 		this.addSlotToContainer(
-				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_SYMBOL, -20, 40));
+				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_SYMBOL, 9, 206));
 		this.addSlotToContainer(
-				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_INK, -20, 60));
+				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_INK, 224, 110));
 		this.addSlotToContainer(
-				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_BOTTLES, -20, 80));
+				new SlotFiltered(inventory, this.tileEntity, TileEntitySymbolRecordingDesk.SLOT_BOTTLES, 224, 206));
 
 		for (int i = 0; i < 3; i++) {
 			for (int k = 0; k < 9; k++) {
-				addSlotToContainer(new Slot(inventoryplayer, k + i * 9 + 9, 8 + k * 18, 135 + i * 18));
+				addSlotToContainer(new Slot(inventoryplayer, k + i * 9 + 9, (k * 18) + 44, (i * 18) + 148));
 			}
 		}
 
 		for (int j = 0; j < 9; j++) {
-			addSlotToContainer(new Slot(inventoryplayer, j, 8 + j * 18, 193));
+			addSlotToContainer(new Slot(inventoryplayer, j, (j * 18) + 44, 206));
 		}
 
 		SlotCollection maininv = new SlotCollection(this, 0, 27);
