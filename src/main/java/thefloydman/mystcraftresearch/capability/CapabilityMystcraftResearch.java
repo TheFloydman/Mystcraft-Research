@@ -7,12 +7,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
+import com.xcompwiz.mystcraft.data.ModItems;
+import com.xcompwiz.mystcraft.item.ItemFolder;
+import com.xcompwiz.mystcraft.page.Page;
 import com.xcompwiz.mystcraft.symbol.modifiers.SymbolBiome;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.item.ItemStack;
 import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
-import thefloydman.mystcraftresearch.proxy.CommonProxy;
 import thefloydman.mystcraftresearch.util.Reference;
 
 public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch {
@@ -21,16 +23,14 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 
 	@Override
 	public void learnSymbol(@Nonnull IAgeSymbol symbol, @Nullable EntityPlayerMP player) {
-		if (player != null) {
+		if (symbol instanceof SymbolBiome) {
 			if (!this.knowsSymbol(symbol)) {
 				this.playerSymbols.add(symbol);
-
-				if (symbol instanceof SymbolBiome) {
+				if (player != null) {
 					MystcraftResearchPacketHandler.sendTranslatedMessage(player, Reference.Message.LEARN_BIOME.key);
 				}
 			} else {
-
-				if (symbol instanceof SymbolBiome) {
+				if (player != null) {
 					MystcraftResearchPacketHandler.sendTranslatedMessage(player, Reference.Message.KNOWN_BIOME.key);
 				}
 			}
@@ -64,6 +64,22 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 			}
 		}
 		return knows;
+	}
+
+	@Override
+	public ItemStack getSymbolsInFolder() {
+		ItemStack folderStack = new ItemStack(ModItems.folder);
+		List<IAgeSymbol> symbols = this.getKnownSymbols();
+		for (IAgeSymbol symbol : symbols) {
+			ItemStack pageStack = Page.createSymbolPage(symbol.getRegistryName());
+			((ItemFolder) ModItems.folder).addPage(null, folderStack, pageStack);
+		}
+		return folderStack;
+	}
+
+	@Override
+	public void forgetAllSymbols() {
+		this.playerSymbols = new ArrayList<IAgeSymbol>();
 	}
 
 }

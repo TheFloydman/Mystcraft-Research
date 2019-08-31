@@ -4,6 +4,7 @@ import com.xcompwiz.mystcraft.api.MystObjects;
 import com.xcompwiz.mystcraft.api.exception.APIUndefined;
 import com.xcompwiz.mystcraft.api.exception.APIVersionRemoved;
 import com.xcompwiz.mystcraft.api.exception.APIVersionUndefined;
+import com.xcompwiz.mystcraft.api.hook.PageAPI;
 import com.xcompwiz.mystcraft.api.hook.SymbolAPI;
 
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -23,6 +24,7 @@ import thefloydman.mystcraftresearch.util.Reference;
 public class CommonProxy {
 
 	public static SymbolAPI symbolApi;
+	public static PageAPI pageApi;
 
 	public void preInit(FMLPreInitializationEvent event) {
 		MystcraftResearchPacketHandler.register();
@@ -32,9 +34,10 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {
-		MystcraftResearch.logger.info("Initializing Mystcraft Symbol API");
+		MystcraftResearch.logger.info("Initializing Mystcraft Symbol and Page APIs");
 		try {
 			symbolApi = (SymbolAPI) MystObjects.entryPoint.getProviderInstance().getAPIInstance("symbol-1");
+			pageApi = (PageAPI) MystObjects.entryPoint.getProviderInstance().getAPIInstance("page-1");
 		} catch (APIVersionRemoved e1) {
 			MystcraftResearch.logger.error("API version removed!");
 		} catch (APIVersionUndefined e2) {

@@ -7,6 +7,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -15,7 +16,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import thefloydman.mystcraftresearch.MystcraftResearch;
+import thefloydman.mystcraftresearch.capability.ICapabilityMystcraftResearch;
+import thefloydman.mystcraftresearch.capability.ProviderCapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.gui.MystcraftResearchGUIs;
+import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
 import thefloydman.mystcraftresearch.tileentity.TileEntitySymbolRecordingDesk;
 import thefloydman.mystcraftresearch.util.Reference;
 
@@ -55,8 +59,15 @@ public class BlockSymbolRecordingDesk extends Block {
 			final EntityPlayer player, final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY,
 			final float hitZ) {
 
-		player.openGui((Object) MystcraftResearch.instance, MystcraftResearchGUIs.SYMBOL_RECORDING_DESK.ordinal(),
-				world, pos.getX(), pos.getY(), pos.getZ());
+		if (!world.isRemote) {
+			ICapabilityMystcraftResearch cap = player
+					.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
+			if (cap != null) {
+				MystcraftResearchPacketHandler.syncResearch((EntityPlayerMP) player, cap.getKnownSymbols());
+			}
+			player.openGui((Object) MystcraftResearch.instance, MystcraftResearchGUIs.SYMBOL_RECORDING_DESK.ordinal(),
+					world, pos.getX(), pos.getY(), pos.getZ());
+		}
 
 		return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
 

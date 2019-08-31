@@ -9,10 +9,12 @@ import org.lwjgl.input.Keyboard;
 import com.xcompwiz.mystcraft.client.gui.GuiContainerElements;
 import com.xcompwiz.mystcraft.client.gui.GuiElementSurfaceControlsBase;
 import com.xcompwiz.mystcraft.client.gui.element.GuiElementButtonToggle;
+import com.xcompwiz.mystcraft.client.gui.element.GuiElementFluidTank;
 import com.xcompwiz.mystcraft.client.gui.element.GuiElementPageSurface;
 import com.xcompwiz.mystcraft.client.gui.element.GuiElementPageSurface.PositionableItem;
 import com.xcompwiz.mystcraft.client.gui.element.GuiElementTextField;
 import com.xcompwiz.mystcraft.data.Assets;
+import com.xcompwiz.mystcraft.inventory.IFluidTankProvider;
 import com.xcompwiz.mystcraft.network.MystcraftPacketHandler;
 import com.xcompwiz.mystcraft.network.packet.MPacketGuiMessage;
 import com.xcompwiz.mystcraft.page.Page;
@@ -84,7 +86,7 @@ public class GuiSymbolRecordingDesk extends GuiContainerElements {
 		txt_box = new GuiElementTextField(surfacemanager, surfacemanager, "SearchBox", 40, 0, this.xSize - 40, 18);
 		addElement(txt_box);
 
-		GuiElementPageSurface surface = new GuiElementPageSurface(surfacemanager, this.mc, 0, 19, this.xSize, 114);
+		GuiElementPageSurface surface = new GuiElementPageSurface(surfacemanager, this.mc, 0, 19, this.xSize - 16, 114);
 		surfacemanager.addListener(surface);
 		addElement(surface);
 
@@ -101,6 +103,9 @@ public class GuiSymbolRecordingDesk extends GuiContainerElements {
 
 		surfacemanager.addSurfaceElement(guiElementButtonToggle1);
 		surfacemanager.addSurfaceElement(guiElementButtonToggle2);
+		
+		IFluidTankProvider fluidprovider = this.container.getInkTankProvider();
+		addElement(new GuiElementFluidTank(this.container, this.mc, 160, 20, 16, 70, fluidprovider));
 	}
 
 	protected void _drawBackgroundLayer(int mouseX, int mouseY, float f) {
