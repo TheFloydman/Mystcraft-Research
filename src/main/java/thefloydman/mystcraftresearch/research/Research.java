@@ -32,6 +32,7 @@ public class Research {
 	public static void init() {
 		mapColors();
 		mapSymbols();
+		generateFlags();
 	}
 
 	public static void learnSymbol(EntityPlayer player, Object object) {
@@ -86,6 +87,7 @@ public class Research {
 					}
 				}
 			}
+			addFlag(symbol, EnumFlag.ACTIVATED_JOURNAL);
 		}
 	}
 
@@ -103,14 +105,14 @@ public class Research {
 		return EnumDyeColor.BLACK;
 	}
 
-	public static void addFlag(IAgeSymbol symbol, String flag) {
+	public static void addFlag(IAgeSymbol symbol, EnumFlag flag) {
 		addFlag(symbol.getRegistryName(), flag);
 	}
 
-	public static void addFlag(ResourceLocation loc, String flag) {
+	public static void addFlag(ResourceLocation loc, EnumFlag flag) {
 		List<String> flags = flagMap.get(loc);
-		if (!flags.contains(flag)) {
-			flags.add(flag);
+		if (!flags.contains(flag.name)) {
+			flags.add(flag.name);
 			flagMap.put(loc, flags);
 		}
 	}
