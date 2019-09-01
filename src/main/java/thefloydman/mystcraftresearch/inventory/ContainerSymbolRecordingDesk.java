@@ -84,7 +84,7 @@ public class ContainerSymbolRecordingDesk extends ContainerBase implements IGuiM
 		ICapabilityMystcraftResearch cap = this.playerInventory.player
 				.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
 		if (cap != null) {
-			this.folderStack = cap.getSymbolsInFolder();
+			this.folderStack = cap.getSymbolsAsFolder();
 		}
 	}
 

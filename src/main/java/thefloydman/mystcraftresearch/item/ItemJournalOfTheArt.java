@@ -9,6 +9,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import thefloydman.mystcraftresearch.research.EnumFlag;
 import thefloydman.mystcraftresearch.research.Research;
 import thefloydman.mystcraftresearch.util.Reference;
 
@@ -25,7 +26,7 @@ public class ItemJournalOfTheArt extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if (!world.isRemote) {
 			Biome biome = world.getBiome(player.getPosition());
-			Research.learnSymbol(player, biome);
+			Research.learnSymbol(player, biome, EnumFlag.TOOK_NOTES, true);
 		}
 		return super.onItemRightClick(world, player, hand);
 	}

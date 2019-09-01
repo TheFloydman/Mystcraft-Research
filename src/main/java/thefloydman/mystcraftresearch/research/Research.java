@@ -1,5 +1,6 @@
 package thefloydman.mystcraftresearch.research;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,23 +28,36 @@ public class Research {
 
 	public static Map<Object, ResourceLocation> symbolMap = new HashMap<Object, ResourceLocation>();
 	public static Map<EnumDyeColor, MystcraftColor> colorMap = new HashMap<EnumDyeColor, MystcraftColor>();
+	public static List<String> allFlags = new ArrayList<String>();
 	public static Map<ResourceLocation, List<String>> flagMap = new HashMap<ResourceLocation, List<String>>();
 
 	public static void init() {
 		mapColors();
 		mapSymbols();
-		generateFlags();
 	}
 
-	public static void learnSymbol(EntityPlayer player, Object object) {
+	public static void learnSymbol(EntityPlayer player, Object object, EnumFlag flag, boolean tripped) {
 		if (symbolMap.containsKey(object)) {
 			IAgeSymbol symbol = CommonProxy.symbolApi.getSymbol(symbolMap.get(object));
 			if (symbol != null) {
 				ICapabilityMystcraftResearch cap = player
 						.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
-				cap.learnSymbol(symbol, (EntityPlayerMP) player);
+				cap.setFlag(symbol, flag, tripped);
 			} else {
 				MystcraftResearch.logger.error("Cannot learn symbol because it is null.");
+			}
+		}
+	}
+	
+	public static void setFlag(EntityPlayer player, Object object, EnumFlag flag, boolean bool) {
+		if (symbolMap.containsKey(object)) {
+			IAgeSymbol symbol = CommonProxy.symbolApi.getSymbol(symbolMap.get(object));
+			if (symbol != null) {
+				ICapabilityMystcraftResearch cap = player
+						.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
+				cap.setFlag(symbol, flag, bool);
+			} else {
+				MystcraftResearch.logger.error("Cannot set flag because symbol is null.");
 			}
 		}
 	}
@@ -87,7 +101,6 @@ public class Research {
 					}
 				}
 			}
-			addFlag(symbol, EnumFlag.ACTIVATED_JOURNAL);
 		}
 	}
 
@@ -105,15 +118,21 @@ public class Research {
 		return EnumDyeColor.BLACK;
 	}
 
-	public static void addFlag(IAgeSymbol symbol, EnumFlag flag) {
-		addFlag(symbol.getRegistryName(), flag);
+	public static void applyFlagToSymbol(IAgeSymbol symbol, String flag) {
+		applyFlagToSymbol(symbol.getRegistryName(), flag);
 	}
 
-	public static void addFlag(ResourceLocation loc, EnumFlag flag) {
+	public static void applyFlagToSymbol(ResourceLocation loc, String flag) {
 		List<String> flags = flagMap.get(loc);
-		if (!flags.contains(flag.name)) {
-			flags.add(flag.name);
+		if (!flags.contains(flag)) {
+			flags.add(flag);
 			flagMap.put(loc, flags);
+		}
+	}
+
+	public static void addFlag(String flag) {
+		if (!allFlags.contains(flag)) {
+			allFlags.add(flag);
 		}
 	}
 
