@@ -18,6 +18,7 @@ import com.xcompwiz.mystcraft.symbol.modifiers.SymbolBiome;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import thefloydman.mystcraftresearch.MystcraftResearch;
 import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
 import thefloydman.mystcraftresearch.proxy.CommonProxy;
 import thefloydman.mystcraftresearch.research.EnumFlag;
@@ -25,31 +26,7 @@ import thefloydman.mystcraftresearch.util.Reference;
 
 public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch {
 
-	protected List<IAgeSymbol> playerSymbols = new ArrayList<IAgeSymbol>();
 	public Map<ResourceLocation, Map<String, Boolean>> flags = new HashMap<ResourceLocation, Map<String, Boolean>>();
-
-	@Override
-	public void learnSymbol(@Nonnull IAgeSymbol symbol, @Nullable EntityPlayerMP player) {
-		if (symbol instanceof SymbolBiome) {
-			if (!this.knowsSymbol(symbol)) {
-				this.playerSymbols.add(symbol);
-				if (player != null) {
-					MystcraftResearchPacketHandler.sendTranslatedMessage(player, Reference.Message.LEARN_BIOME.key);
-				}
-			} else {
-				if (player != null) {
-					MystcraftResearchPacketHandler.sendTranslatedMessage(player, Reference.Message.KNOWN_BIOME.key);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void forgetSymbol(IAgeSymbol symbol) {
-		if (this.knowsSymbol(symbol)) {
-			this.playerSymbols.remove(symbol);
-		}
-	}
 
 	@Override
 	public List<IAgeSymbol> getKnownSymbols() {
@@ -74,23 +51,6 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 	}
 
 	@Override
-	public void setKnownSymbols(List<IAgeSymbol> symbols) {
-		this.playerSymbols = symbols;
-	}
-
-	@Override
-	public boolean knowsSymbol(IAgeSymbol symbol) {
-		boolean knows = false;
-		for (IAgeSymbol knownSymbol : this.getKnownSymbols()) {
-			if (knownSymbol.equals(symbol)) {
-				knows = true;
-				break;
-			}
-		}
-		return knows;
-	}
-
-	@Override
 	public ItemStack getSymbolsAsFolder() {
 		ItemStack folderStack = new ItemStack(ModItems.folder);
 		List<IAgeSymbol> symbols = this.getKnownSymbols();
@@ -98,17 +58,13 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 			ItemStack pageStack = Page.createSymbolPage(symbol.getRegistryName());
 			((ItemFolder) ModItems.folder).addPage(null, folderStack, pageStack);
 		}
+		MystcraftResearch.logger.info(symbols);
 		return folderStack;
 	}
 
 	@Override
-	public void forgetAllSymbols() {
-		this.playerSymbols = new ArrayList<IAgeSymbol>();
-	}
-
-	@Override
 	public void setFlag(IAgeSymbol symbol, EnumFlag flag, boolean tripped) {
-		Map<String, Boolean> flagMap = this.getFlag(symbol.getRegistryName());
+		Map<String, Boolean> flagMap = new HashMap<String, Boolean>();
 		flagMap.put(flag.name, tripped);
 		Map<ResourceLocation, Map<String, Boolean>> allFlags = this.getAllFlags();
 		allFlags.put(symbol.getRegistryName(), flagMap);
@@ -116,9 +72,6 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 	}
 
 	public Map<String, Boolean> getFlag(ResourceLocation loc) {
-		if (!this.getAllFlags().containsKey(loc)) {
-			
-		}
 		return this.getAllFlags().get(loc);
 	}
 

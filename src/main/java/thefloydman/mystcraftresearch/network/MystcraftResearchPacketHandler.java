@@ -5,6 +5,7 @@ import java.util.List;
 import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,8 +34,8 @@ public class MystcraftResearchPacketHandler {
 		CHANNEL.sendTo(new PacketSendStatusMessage(key), player);
 	}
 
-	public static void syncResearch(EntityPlayerMP player, List<IAgeSymbol> symbols) {
-		CHANNEL.sendTo(new PacketSyncResearchCapability(symbols), player);
+	public static void syncResearch(EntityPlayerMP player, NBTTagList list) {
+		CHANNEL.sendTo(new PacketSyncResearchCapability(list), player);
 	}
 
 }

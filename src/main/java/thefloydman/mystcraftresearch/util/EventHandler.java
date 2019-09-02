@@ -55,7 +55,7 @@ public class EventHandler {
 					.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
 			ICapabilityMystcraftResearch capResearchNew = entityNew
 					.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
-			capResearchNew.setKnownSymbols(capResearchOld.getKnownSymbols());
+			capResearchNew.setAllFlags(capResearchOld.getAllFlags());
 
 		}
 

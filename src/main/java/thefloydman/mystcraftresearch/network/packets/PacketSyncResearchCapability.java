@@ -1,15 +1,11 @@
 package thefloydman.mystcraftresearch.network.packets;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -17,18 +13,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import thefloydman.mystcraftresearch.capability.ICapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.capability.ProviderCapabilityMystcraftResearch;
-import thefloydman.mystcraftresearch.proxy.CommonProxy;
+import thefloydman.mystcraftresearch.capability.StorageCapabilityMystcraftResearch;
 
 public class PacketSyncResearchCapability implements IMessage {
 
-	List<IAgeSymbol> symbolList;
+	NBTTagList symbolInfo;
 
-	public PacketSyncResearchCapability(List<IAgeSymbol> symbols) {
-		this.symbolList = symbols;
+	public PacketSyncResearchCapability(NBTTagList nbt) {
+		this.symbolInfo = nbt;
 	}
 
 	public PacketSyncResearchCapability() {
-		this.symbolList = new ArrayList<IAgeSymbol>();
+		this.symbolInfo = new NBTTagList();
 	}
 
 	public static class Handler implements IMessageHandler<PacketSyncResearchCapability, IMessage> {
@@ -40,7 +36,7 @@ public class PacketSyncResearchCapability implements IMessage {
 			ICapabilityMystcraftResearch cap = player
 					.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
 			if (cap != null) {
-				cap.setKnownSymbols(msg.symbolList);
+				cap.setAllFlags(StorageCapabilityMystcraftResearch.nbtToMap(msg.symbolInfo));
 			}
 			return null;
 		}
@@ -48,24 +44,14 @@ public class PacketSyncResearchCapability implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.symbolList = new ArrayList<IAgeSymbol>();
-		while (buf.isReadable()) {
-			int length = buf.readInt();
-			String name = buf.readCharSequence(length, Charset.defaultCharset()).toString();
-			IAgeSymbol symbol = CommonProxy.symbolApi.getSymbol(new ResourceLocation(name));
-			if (symbol != null) {
-				this.symbolList.add(symbol);
-			}
-		}
+		this.symbolInfo = ByteBufUtils.readTag(buf).getTagList("list", 10);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		for (IAgeSymbol symbol : this.symbolList) {
-			String name = symbol.getRegistryName().toString();
-			buf.writeInt(name.length());
-			buf.writeCharSequence(name, Charset.defaultCharset());
-		}
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setTag("list", this.symbolInfo);
+		ByteBufUtils.writeTag(buf, compound);
 	}
 
 }

@@ -14,17 +14,7 @@ import thefloydman.mystcraftresearch.research.EnumFlag;
 
 public interface ICapabilityMystcraftResearch {
 
-	public void learnSymbol(IAgeSymbol symbol, @Nullable EntityPlayerMP player);
-
-	public void forgetSymbol(IAgeSymbol symbol);
-	
-	public void forgetAllSymbols();
-
 	public List<IAgeSymbol> getKnownSymbols();
-
-	public void setKnownSymbols(List<IAgeSymbol> symbols);
-
-	public boolean knowsSymbol(IAgeSymbol symbol);
 	
 	public ItemStack getSymbolsAsFolder();
 	

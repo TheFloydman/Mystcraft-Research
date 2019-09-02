@@ -19,19 +19,7 @@ public class StorageCapabilityMystcraftResearch implements IStorage<ICapabilityM
 			EnumFacing side) {
 		NBTTagList nbt = new NBTTagList();
 		if (instance != null) {
-			for (Entry<ResourceLocation, Map<String, Boolean>> entrySymbol : instance.getAllFlags().entrySet()) {
-				NBTTagCompound symbol = new NBTTagCompound();
-				NBTTagList flagList = new NBTTagList();
-				for (Entry<String, Boolean> entryFlag : entrySymbol.getValue().entrySet()) {
-					NBTTagCompound flag = new NBTTagCompound();
-					flag.setBoolean("tripped", entryFlag.getValue());
-					flag.setString("name", entryFlag.getKey());
-					flagList.appendTag(flag);
-				}
-				symbol.setString("name", entrySymbol.getKey().toString());
-				symbol.setTag("flags", flagList);
-				nbt.appendTag(symbol);
-			}
+			nbt = mapToNBT(instance.getAllFlags());
 		}
 		return nbt;
 	}
@@ -41,24 +29,47 @@ public class StorageCapabilityMystcraftResearch implements IStorage<ICapabilityM
 			EnumFacing side, NBTBase nbt) {
 		if (instance != null) {
 			if (nbt != null) {
-				Map<ResourceLocation, Map<String, Boolean>> symbolMap = new HashMap<ResourceLocation, Map<String, Boolean>>();
 				NBTTagList list = (NBTTagList) nbt;
-				for (NBTBase base : list) {
-					NBTTagCompound symbolCompound = (NBTTagCompound) base;
-					ResourceLocation loc = new ResourceLocation(symbolCompound.getString("name"));
-					NBTTagList flagList = symbolCompound.getTagList("flags", 10);
-					Map<String, Boolean> flagMap = new HashMap<String, Boolean>();
-					for (NBTBase flagBase : flagList) {
-						NBTTagCompound flagCompound = (NBTTagCompound) flagBase;
-						String flagName = flagCompound.getString("name");
-						boolean flagTripped = flagCompound.getBoolean("tripped");
-						flagMap.put(flagName, flagTripped);
-					}
-					symbolMap.put(loc, flagMap);
-				}
+				Map<ResourceLocation, Map<String, Boolean>> symbolMap = nbtToMap(list);
 				instance.setAllFlags(symbolMap);
 			}
 		}
+	}
+	
+	public static Map<ResourceLocation, Map<String, Boolean>> nbtToMap(NBTTagList list) {
+		Map<ResourceLocation, Map<String, Boolean>> symbolMap = new HashMap<ResourceLocation, Map<String, Boolean>>();
+		for (NBTBase base : list) {
+			NBTTagCompound symbolCompound = (NBTTagCompound) base;
+			ResourceLocation loc = new ResourceLocation(symbolCompound.getString("name"));
+			NBTTagList flagList = symbolCompound.getTagList("flags", 10);
+			Map<String, Boolean> flagMap = new HashMap<String, Boolean>();
+			for (NBTBase flagBase : flagList) {
+				NBTTagCompound flagCompound = (NBTTagCompound) flagBase;
+				String flagName = flagCompound.getString("name");
+				boolean flagTripped = flagCompound.getBoolean("tripped");
+				flagMap.put(flagName, flagTripped);
+			}
+			symbolMap.put(loc, flagMap);
+		}
+		return symbolMap;
+	}
+	
+	public static NBTTagList mapToNBT(Map<ResourceLocation, Map<String, Boolean>> map) {
+		NBTTagList nbt = new NBTTagList();
+		for (Entry<ResourceLocation, Map<String, Boolean>> entrySymbol : map.entrySet()) {
+			NBTTagCompound symbol = new NBTTagCompound();
+			NBTTagList flagList = new NBTTagList();
+			for (Entry<String, Boolean> entryFlag : entrySymbol.getValue().entrySet()) {
+				NBTTagCompound flag = new NBTTagCompound();
+				flag.setBoolean("tripped", entryFlag.getValue());
+				flag.setString("name", entryFlag.getKey());
+				flagList.appendTag(flag);
+			}
+			symbol.setString("name", entrySymbol.getKey().toString());
+			symbol.setTag("flags", flagList);
+			nbt.appendTag(symbol);
+		}
+		return nbt;
 	}
 
 }

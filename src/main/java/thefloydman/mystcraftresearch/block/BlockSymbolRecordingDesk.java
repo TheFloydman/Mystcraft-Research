@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import thefloydman.mystcraftresearch.MystcraftResearch;
 import thefloydman.mystcraftresearch.capability.ICapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.capability.ProviderCapabilityMystcraftResearch;
+import thefloydman.mystcraftresearch.capability.StorageCapabilityMystcraftResearch;
 import thefloydman.mystcraftresearch.gui.MystcraftResearchGUIs;
 import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
 import thefloydman.mystcraftresearch.tileentity.TileEntitySymbolRecordingDesk;
@@ -63,7 +64,8 @@ public class BlockSymbolRecordingDesk extends Block {
 			ICapabilityMystcraftResearch cap = player
 					.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
 			if (cap != null) {
-				MystcraftResearchPacketHandler.syncResearch((EntityPlayerMP) player, cap.getKnownSymbols());
+				MystcraftResearchPacketHandler.syncResearch((EntityPlayerMP) player,
+						StorageCapabilityMystcraftResearch.mapToNBT(cap.getAllFlags()));
 			}
 			player.openGui((Object) MystcraftResearch.instance, MystcraftResearchGUIs.SYMBOL_RECORDING_DESK.ordinal(),
 					world, pos.getX(), pos.getY(), pos.getZ());
