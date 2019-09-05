@@ -8,17 +8,17 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-import thefloydman.mystcraftresearch.block.BlockSymbolRecordingDesk;
+import thefloydman.mystcraftresearch.block.BlockSymbolResearchDesk;
 import thefloydman.mystcraftresearch.util.Reference;
 
 public class MystcraftResearchBlocks {
 
-	@ObjectHolder(value = Reference.BlockNames.SYMBOL_RECORDING_DESK)
+	@ObjectHolder(value = Reference.BlockNames.SYMBOL_RESEARCH_DESK)
 	public static final Block SYMBOL_RECORDING_DESK = null;
 
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		
-		event.getRegistry().register(new BlockSymbolRecordingDesk());
+		event.getRegistry().register(new BlockSymbolResearchDesk());
 		
 	}
 	

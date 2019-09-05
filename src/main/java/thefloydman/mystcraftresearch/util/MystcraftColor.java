@@ -10,7 +10,7 @@ public enum MystcraftColor {
 	GREEN(0.0F, 1.0F, 0.0F, "green"),
 	GREY(0.5F, 0.5F, 0.5F, "grey"),
 	MAGENTA(1.0F, 0.0F, 1.0F, "magenta"),
-	MAROON(0.5F, 0.0F, 0.0F, "marron"),
+	MAROON(0.5F, 0.0F, 0.0F, "maroon"),
 	NAVY(0.0F, 0.0F, 0.5F, "navy"),
 	OLIVE(0.5F, 0.5F, 0.0F, "olive"),
 	PURPLE(0.5F, 0.0F, 0.5F, "purple"),

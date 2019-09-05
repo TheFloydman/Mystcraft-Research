@@ -13,7 +13,6 @@ import com.xcompwiz.mystcraft.symbol.modifiers.SymbolBlock;
 import com.xcompwiz.mystcraft.symbol.modifiers.SymbolColor;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -29,10 +28,9 @@ public class Research {
 	public static Map<Object, ResourceLocation> symbolMap = new HashMap<Object, ResourceLocation>();
 	public static Map<EnumDyeColor, MystcraftColor> colorMap = new HashMap<EnumDyeColor, MystcraftColor>();
 	public static List<String> allFlags = new ArrayList<String>();
-	public static Map<ResourceLocation, List<String>> flagMap = new HashMap<ResourceLocation, List<String>>();
+	public static Map<ResourceLocation, Map<String, Boolean>> flagMap = new HashMap<ResourceLocation, Map<String, Boolean>>();
 
 	public static void init() {
-		mapColors();
 		mapSymbols();
 	}
 
@@ -48,57 +46,53 @@ public class Research {
 			}
 		}
 	}
-	
-	public static void setFlag(EntityPlayer player, Object object, EnumFlag flag, boolean bool) {
-		if (symbolMap.containsKey(object)) {
-			IAgeSymbol symbol = CommonProxy.symbolApi.getSymbol(symbolMap.get(object));
-			if (symbol != null) {
-				ICapabilityMystcraftResearch cap = player
-						.getCapability(ProviderCapabilityMystcraftResearch.MYSTCRAFT_RESEARCH, null);
-				cap.setFlag(symbol, flag, bool);
-			} else {
-				MystcraftResearch.logger.error("Cannot set flag because symbol is null.");
-			}
-		}
-	}
-
-	protected static void mapColors() {
-		colorMap.put(EnumDyeColor.BLACK, MystcraftColor.BLACK);
-		colorMap.put(EnumDyeColor.BLUE, MystcraftColor.BLUE);
-		colorMap.put(EnumDyeColor.BROWN, MystcraftColor.OLIVE);
-		colorMap.put(EnumDyeColor.CYAN, MystcraftColor.CYAN);
-		colorMap.put(EnumDyeColor.GRAY, MystcraftColor.GREY);
-		colorMap.put(EnumDyeColor.GREEN, MystcraftColor.DARK_GREEN);
-		colorMap.put(EnumDyeColor.LIGHT_BLUE, MystcraftColor.TEAL);
-		colorMap.put(EnumDyeColor.LIME, MystcraftColor.GREEN);
-		colorMap.put(EnumDyeColor.MAGENTA, MystcraftColor.MAGENTA);
-		colorMap.put(EnumDyeColor.ORANGE, MystcraftColor.MAROON);
-		colorMap.put(EnumDyeColor.PINK, MystcraftColor.NAVY);
-		colorMap.put(EnumDyeColor.PURPLE, MystcraftColor.PURPLE);
-		colorMap.put(EnumDyeColor.RED, MystcraftColor.RED);
-		colorMap.put(EnumDyeColor.SILVER, MystcraftColor.SILVER);
-		colorMap.put(EnumDyeColor.WHITE, MystcraftColor.WHITE);
-		colorMap.put(EnumDyeColor.YELLOW, MystcraftColor.YELLOW);
-	}
 
 	protected static void mapSymbols() {
 		List<IAgeSymbol> allSymbols = CommonProxy.symbolApi.getAllRegisteredSymbols();
 		for (IAgeSymbol symbol : allSymbols) {
 			if (symbol instanceof SymbolBlock) {
-				symbolMap.put(((SymbolBlock) symbol).blockDescriptor.blockstate, symbol.getRegistryName());
+				mapBlockSymbol(symbol);
 			} else if (symbol instanceof SymbolBiome) {
-				for (Biome biome : ForgeRegistries.BIOMES) {
-					ResourceLocation loc = new ResourceLocation("mystcraft",
-							"Biome" + String.valueOf(Biome.getIdForBiome(biome)));
-					if (symbol.getRegistryName().equals(loc)) {
-						symbolMap.put(biome, loc);
-					}
-				}
+				mapBiomeSymbol(symbol);
 			} else if (symbol instanceof SymbolColor) {
-				for (MystcraftColor color : MystcraftColor.values()) {
-					if (color.resourceLocation.equals(((SymbolColor) symbol).getRegistryName())) {
-						symbolMap.put(color, ((SymbolColor) symbol).getRegistryName());
-					}
+				mapColorSymbol(symbol);
+			}
+		}
+	}
+
+	protected static void mapBlockSymbol(IAgeSymbol symbol) {
+		symbolMap.put(((SymbolBlock) symbol).blockDescriptor.blockstate, symbol.getRegistryName());
+		setFlags(symbol, false, EnumFlag.TOOK_NOTES);
+	}
+
+	protected static void mapBiomeSymbol(IAgeSymbol symbol) {
+		for (Biome biome : ForgeRegistries.BIOMES) {
+			ResourceLocation loc = new ResourceLocation("mystcraft",
+					"Biome" + String.valueOf(Biome.getIdForBiome(biome)));
+			if (symbol.getRegistryName().equals(loc)) {
+				symbolMap.put(biome, loc);
+				setFlags(symbol, false, EnumFlag.TOOK_NOTES);
+				break;
+			}
+		}
+	}
+
+	protected static void mapColorSymbol(IAgeSymbol symbol) {
+		for (MystcraftColor color : MystcraftColor.values()) {
+			SymbolColor symbolColor = (SymbolColor) symbol;
+			if (color.resourceLocation.equals(symbolColor.getRegistryName())) {
+				symbolMap.put(color, symbolColor.getRegistryName());
+				setFlags(symbol, false, EnumFlag.TOOK_NOTES);
+				if (color.equals(MystcraftColor.TEAL)) {
+					setFlags(symbol, false, EnumFlag.LEARNED_BLUE, EnumFlag.LEARNED_GREEN);
+				} else if (color.equals(MystcraftColor.DARK_GREEN)) {
+					setFlags(symbol, false, EnumFlag.LEARNED_BLACK, EnumFlag.LEARNED_GREEN);
+				} else if (color.equals(MystcraftColor.OLIVE)) {
+					setFlags(symbol, false, EnumFlag.LEARNED_GREY, EnumFlag.LEARNED_GREEN);
+				} else if (color.equals(MystcraftColor.NAVY)) {
+					setFlags(symbol, false, EnumFlag.LEARNED_BLACK, EnumFlag.LEARNED_BLUE);
+				} else if (color.equals(MystcraftColor.MAROON)) {
+					setFlags(symbol, false, EnumFlag.LEARNED_BLACK, EnumFlag.LEARNED_RED);
 				}
 			}
 		}
@@ -118,22 +112,35 @@ public class Research {
 		return EnumDyeColor.BLACK;
 	}
 
-	public static void applyFlagToSymbol(IAgeSymbol symbol, String flag) {
-		applyFlagToSymbol(symbol.getRegistryName(), flag);
-	}
-
-	public static void applyFlagToSymbol(ResourceLocation loc, String flag) {
-		List<String> flags = flagMap.get(loc);
-		if (!flags.contains(flag)) {
-			flags.add(flag);
-			flagMap.put(loc, flags);
-		}
-	}
-
 	public static void addFlag(String flag) {
 		if (!allFlags.contains(flag)) {
 			allFlags.add(flag);
 		}
+	}
+
+	public static void setFlag(IAgeSymbol symbol, EnumFlag flag, boolean tripped) {
+		Map<ResourceLocation, Map<String, Boolean>> allFlags = getAllFlags();
+		Map<String, Boolean> flagMap = allFlags.get(symbol.getRegistryName());
+		if (flagMap == null) {
+			flagMap = new HashMap<String, Boolean>();
+		}
+		flagMap.put(flag.name, tripped);
+		allFlags.put(symbol.getRegistryName(), flagMap);
+		setAllFlags(allFlags);
+	}
+
+	public static void setFlags(IAgeSymbol symbol, boolean tripped, EnumFlag... flags) {
+		for (EnumFlag flag : flags) {
+			setFlag(symbol, flag, tripped);
+		}
+	}
+
+	public static Map<ResourceLocation, Map<String, Boolean>> getAllFlags() {
+		return flagMap;
+	}
+
+	public static void setAllFlags(Map<ResourceLocation, Map<String, Boolean>> map) {
+		flagMap = map;
 	}
 
 }

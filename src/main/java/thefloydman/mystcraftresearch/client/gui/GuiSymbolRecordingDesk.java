@@ -21,13 +21,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import thefloydman.mystcraftresearch.inventory.ContainerSymbolRecordingDesk;
-import thefloydman.mystcraftresearch.tileentity.TileEntitySymbolRecordingDesk;
 import thefloydman.mystcraftresearch.util.Reference;
 
 public class GuiSymbolRecordingDesk extends GuiContainerElements {
 	protected ContainerSymbolRecordingDesk container;
 	protected final ResourceLocation texture = new ResourceLocation(Reference.MOD_ID,
-			"textures/gui/symbol_recording_desk.png");
+			"textures/gui/symbol_research_desk.png");
 	protected int[] sizeGui = new int[] { 248, 230 };
 	protected int[] posGui = new int[] { (this.width - this.sizeGui[0]) / 2, (this.height - this.sizeGui[1]) / 2 };
 	protected int[] sizeInv = new int[] { 176, 90 };

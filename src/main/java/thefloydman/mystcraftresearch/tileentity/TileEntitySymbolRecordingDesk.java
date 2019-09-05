@@ -28,7 +28,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import thefloydman.mystcraftresearch.MystcraftResearch;
 
 public class TileEntitySymbolRecordingDesk extends TileEntityBase implements InventoryFilter, ITickable {
 

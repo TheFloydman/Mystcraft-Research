@@ -1,8 +1,7 @@
 package thefloydman.mystcraftresearch.network;
 
-import java.util.List;
-
-import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagList;
@@ -30,8 +29,9 @@ public class MystcraftResearchPacketHandler {
 				Side.CLIENT);
 	}
 
-	public static void sendTranslatedMessage(EntityPlayerMP player, String key) {
-		CHANNEL.sendTo(new PacketSendStatusMessage(key), player);
+	public static void sendTranslatedMessage(@Nonnull EntityPlayerMP player, @Nonnull String key,
+			@Nullable String add) {
+		CHANNEL.sendTo(new PacketSendStatusMessage(key, add), player);
 	}
 
 	public static void syncResearch(EntityPlayerMP player, NBTTagList list) {

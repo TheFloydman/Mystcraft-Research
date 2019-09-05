@@ -24,17 +24,17 @@ import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
 import thefloydman.mystcraftresearch.tileentity.TileEntitySymbolRecordingDesk;
 import thefloydman.mystcraftresearch.util.Reference;
 
-public class BlockSymbolRecordingDesk extends Block {
+public class BlockSymbolResearchDesk extends Block {
 
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
 
-	public BlockSymbolRecordingDesk() {
+	public BlockSymbolResearchDesk() {
 
 		super(Material.WOOD);
 		this.setHardness(1.0f);
 		this.setSoundType(SoundType.WOOD);
-		this.setUnlocalizedName(Reference.MOD_ID + ".symbol_recording_desk");
-		this.setRegistryName(Reference.BlockNames.SYMBOL_RECORDING_DESK);
+		this.setUnlocalizedName(Reference.MOD_ID + ".symbol_research_desk");
+		this.setRegistryName(Reference.BlockNames.SYMBOL_RESEARCH_DESK);
 		this.setCreativeTab(MystcraftCommonProxy.tabMystCommon);
 		this.setDefaultState(blockState.getBaseState());
 

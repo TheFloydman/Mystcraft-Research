@@ -18,7 +18,7 @@ public class Reference {
 
 	public class BlockNames {
 
-		public static final String SYMBOL_RECORDING_DESK = MOD_ID + ":symbol_recording_desk";
+		public static final String SYMBOL_RESEARCH_DESK = MOD_ID + ":symbol_research_desk";
 
 	}
 
@@ -29,8 +29,10 @@ public class Reference {
 	}
 	
 	public enum Message {
-		LEARN_BIOME("research_learn_biome"),
-		KNOWN_BIOME("research_known_biome");
+		LEARN_SYMBOL("research_learn"),
+		KNOWN_SYMBOL("research_known"),
+		FORGET_SYMBOL("research_forget"),
+		FORBIDDEN_SYMBOL("research_forbidden");
 
 		public String key;
 

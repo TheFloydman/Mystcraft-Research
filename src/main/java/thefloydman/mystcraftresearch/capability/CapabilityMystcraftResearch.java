@@ -6,27 +6,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.xcompwiz.mystcraft.api.symbol.IAgeSymbol;
 import com.xcompwiz.mystcraft.data.ModItems;
 import com.xcompwiz.mystcraft.item.ItemFolder;
 import com.xcompwiz.mystcraft.page.Page;
-import com.xcompwiz.mystcraft.symbol.modifiers.SymbolBiome;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import thefloydman.mystcraftresearch.MystcraftResearch;
-import thefloydman.mystcraftresearch.network.MystcraftResearchPacketHandler;
 import thefloydman.mystcraftresearch.proxy.CommonProxy;
 import thefloydman.mystcraftresearch.research.EnumFlag;
-import thefloydman.mystcraftresearch.util.Reference;
+import thefloydman.mystcraftresearch.research.Research;
 
 public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch {
 
-	public Map<ResourceLocation, Map<String, Boolean>> flags = new HashMap<ResourceLocation, Map<String, Boolean>>();
+	public Map<ResourceLocation, Map<String, Boolean>> flags = Research.getAllFlags();
 
 	@Override
 	public List<IAgeSymbol> getKnownSymbols() {
@@ -58,20 +51,22 @@ public class CapabilityMystcraftResearch implements ICapabilityMystcraftResearch
 			ItemStack pageStack = Page.createSymbolPage(symbol.getRegistryName());
 			((ItemFolder) ModItems.folder).addPage(null, folderStack, pageStack);
 		}
-		MystcraftResearch.logger.info(symbols);
 		return folderStack;
 	}
 
 	@Override
 	public void setFlag(IAgeSymbol symbol, EnumFlag flag, boolean tripped) {
-		Map<String, Boolean> flagMap = new HashMap<String, Boolean>();
-		flagMap.put(flag.name, tripped);
 		Map<ResourceLocation, Map<String, Boolean>> allFlags = this.getAllFlags();
+		Map<String, Boolean> flagMap = allFlags.get(symbol.getRegistryName());
+		if (flagMap == null) {
+			flagMap = new HashMap<String, Boolean>();
+		}
+		flagMap.put(flag.name, tripped);
 		allFlags.put(symbol.getRegistryName(), flagMap);
 		this.setAllFlags(allFlags);
 	}
 
-	public Map<String, Boolean> getFlag(ResourceLocation loc) {
+	public Map<String, Boolean> getFlagsForSymbol(ResourceLocation loc) {
 		return this.getAllFlags().get(loc);
 	}
 

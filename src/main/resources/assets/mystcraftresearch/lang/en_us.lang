@@ -1,14 +1,14 @@
 // Block names
-tile.mystcraftresearch.symbol_recording_desk.name=Symbol Recording Desk
+tile.mystcraftresearch.symbol_research_desk.name=Symbol Research Desk
 
 // Item names
 item.mystcraftresearch.journal_of_the_art.name=Journal of the Art
 
 // Container names
-container.mystcraftresearch.symbol_recording_desk.name=Symbol Recording Desk
+container.mystcraftresearch.symbol_research_desk.name=Symbol Research Desk
 
 // Messages
-message.mystcraftresearch.research_learn_biome.desc=You have learned how to write this biome.
-message.mystcraftresearch.research_known_biome.desc=You already know how to write this biome.
-message.mystcraftresearch.research_forget_biome.desc=You have forgotten how to write this biome.
-message.mystcraftresearch.research_forbidden_biome.desc=You cannot learn how to write this biome.
+message.mystcraftresearch.research_learn.desc=You have learned the symbol for
+message.mystcraftresearch.research_knowne.desc=You already know the symbol for
+message.mystcraftresearch.research_forget.desc=You have forgotten the symbol for
+message.mystcraftresearch.research_forbidden.desc=You cannot learn the symbol for
